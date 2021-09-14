@@ -1,11 +1,6 @@
-from requests_html import HTMLSession
-import time, requests
-print("nahrungsparser gestartet")
+import time
+import urllib.request
+import os
 
-
-urlsp6 = "aubauen hier"+"extra"
-
-nodes = requests.get("https://www.todayonline.com/api/v3/news_feed/7")\
-        .json()["nodes"]
-for node in nodes:
-    print(node["node"]["title"])
+url ="https://cdn3.qnips.com/release-menu-pdfs/Mittagessen_DE_37_20210913_668875.pdf"
+urllib.request.urlretrieve(url, "tmp/tmp.pdf")
