@@ -2,17 +2,24 @@ import time
 import urllib.request
 import os
 from datetime import datetime
+import phantomjs
+import js2py
+from requests_html import HTML
 
-url ="https://cdn3.qnips.com/release-menu-pdfs/Mittagessen_DE_"+"37_20210913"+"_"+"668875"+".pdf"
-urllib.request.urlretrieve(url, "tmp/tmp.pdf")
+const puppeteer = require('puppeteer');
 
+(async () = > {
+    const browser = await puppeteer.launch();
+const  page = await browser.newPage();
+await page.goto('https://siemens.cateringportal.io/menu/Erlangen%20S%20SP%206/Mittagessen');
 
+console.log("page opened, waiting for menu population");
+await page.waitForTimeout(3000);
 
-print(os.system('python pdf2txt.py tmp/tmp.pdf'))
+const wrappers = await page.$$(".product-wrapper");
 
-time.sleep(5)
+const texts = await Promise.all(wrappers.map(wrapper= > page.evaluate(el= > el.innerHTML, wrapper)));
+console.log(texts);
 
-if os.path.exists("tmp/tmp.pdf"):
-  os.remove("tmp/tmp.pdf")
-else:
-  print("Du hast hart verkaggert")
+await browser.close();
+})();
