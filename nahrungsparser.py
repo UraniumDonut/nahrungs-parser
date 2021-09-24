@@ -1,25 +1,26 @@
 import time
 import urllib.request
 import os
+import re
 from datetime import datetime
 import phantomjs
 import js2py
 from requests_html import HTML
 
-const puppeteer = require('puppeteer');
+premenu = "kein menu"
+premenu = os.popen("node nahrungsparser.js").read()
 
-(async () = > {
-    const browser = await puppeteer.launch();
-const  page = await browser.newPage();
-await page.goto('https://siemens.cateringportal.io/menu/Erlangen%20S%20SP%206/Mittagessen');
+auswahl = []
 
-console.log("page opened, waiting for menu population");
-await page.waitForTimeout(3000);
+premenu = premenu.split("""class="pre-wrap">""")
+for i in range(len(premenu)):
+    if i != 0:
+        menuentry = premenu[i].split("""</span>""")[0]
+        menuentry = menuentry.replace("'","")
+        menuentry = menuentry.replace("+", "")
+        menuentry = re.sub('\n', '',menuentry)
+        menuentry = menuentry.replace("""\\n""", ' ')
+        menuentry = menuentry.replace("      ", " ")
+        auswahl.append(menuentry)
 
-const wrappers = await page.$$(".product-wrapper");
-
-const texts = await Promise.all(wrappers.map(wrapper= > page.evaluate(el= > el.innerHTML, wrapper)));
-console.log(texts);
-
-await browser.close();
-})();
+print(auswahl)

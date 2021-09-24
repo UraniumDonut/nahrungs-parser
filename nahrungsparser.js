@@ -5,7 +5,7 @@ const puppeteer = require('puppeteer');
   const page = await browser.newPage();
   await page.goto('https://siemens.cateringportal.io/menu/Erlangen%20S%20SP%206/Mittagessen');
   
-  console.log("page opened, waiting for menu population");
+  /*console.log("page opened, waiting for menu population");*/
   await page.waitForTimeout(3000);
  
   const wrappers = await page.$$(".product-wrapper");
